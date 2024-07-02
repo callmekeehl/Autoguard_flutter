@@ -129,11 +129,9 @@ class _SignState extends State<Sign> {
   Widget _buildName() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -177,11 +175,9 @@ class _SignState extends State<Sign> {
   Widget _buildEmail() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -202,11 +198,9 @@ class _SignState extends State<Sign> {
   Widget _buildAddress() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -227,11 +221,9 @@ class _SignState extends State<Sign> {
   Widget _buildPhone() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         keyboardType: TextInputType.phone,
         validator: (value) {
@@ -253,11 +245,9 @@ class _SignState extends State<Sign> {
   Widget _buildPassword() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         obscureText: true,
         validator: (value) {
@@ -282,11 +272,9 @@ class _SignState extends State<Sign> {
   Widget _buildConfirmPassword() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         obscureText: true,
         validator: (value) {

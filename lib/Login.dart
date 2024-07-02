@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:autoguard_flutter/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,8 +55,15 @@ class _LoginState extends State<Login> {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('authToken', token);
 
+        // Afficher un message de succès
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Connexion Réussie!'),
+          backgroundColor: Colors.green,
+        ));
+
         // Naviguer vers l'écran principal ou tableau de bord
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => DashboardScreen()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => Home()));
       } else {
         // Afficher une erreur si la connexion a échoué
         _showErrorDialog(
@@ -90,11 +98,9 @@ class _LoginState extends State<Login> {
   Widget _buildEmail() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -115,11 +121,9 @@ class _LoginState extends State<Login> {
   Widget _buildPassword() {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          offset: Offset(3, 3),
-        )
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         obscureText: true, // Masquer le mot de passe
         validator: (value) {

@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Accueil"),
+        leading: Image.asset("./assets/images/icon.png"),
       ),
       body: Center(
         child: Text("Bienvenue à la page d'accueil!"),

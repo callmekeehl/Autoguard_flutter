@@ -60,6 +60,17 @@ class _SignState extends State<Sign> {
         // Récupérer le jeton JWT
         String? token = responseData['access_token'];
 
+        // Sauvegarder le jeton et les informations de l'utilisateur dans SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (token != null) {
+          await prefs.setString('authToken', token);
+        }
+        await prefs.setString('userNom', nameController.text);
+        await prefs.setString('userPrenom', surnameController.text);
+        await prefs.setString('userEmail', emailController.text);
+        await prefs.setString('userAdresse', addressController.text);
+        await prefs.setString('userTelephone', phoneController.text);
+
         // Afficher unmessage d'avertissement mais avec l'inscription réussie
         if (token == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

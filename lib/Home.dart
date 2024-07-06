@@ -1,3 +1,4 @@
+import 'package:autoguard_flutter/AccountInfo.dart';
 import 'package:autoguard_flutter/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,7 @@ class _HomeState extends State<Home> {
 
   Future<void> _checkAuthentication() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? token = prefs.getString('authToken');
 
     if (token == null) {
       // Si aucun jeton n'est trouvé, redirigez vers la page de connexion
@@ -33,8 +34,31 @@ class _HomeState extends State<Home> {
     // Construisez l'interface utilisateur de la page Home ici
     return Scaffold(
       appBar: AppBar(
-        title: Text("Accueil"),
+        backgroundColor: Colors.blue[400],
+        title: Text(
+          "Autoguard",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         leading: Image.asset("./assets/images/icon.png"),
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AccountInfo()),
+                  );
+                },
+                icon: Icon(
+                  Icons.account_circle_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              )
+            ],
+          )
+        ],
       ),
       body: Center(
         child: Text("Bienvenue à la page d'accueil!"),

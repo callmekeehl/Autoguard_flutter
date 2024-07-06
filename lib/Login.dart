@@ -51,11 +51,32 @@ class _LoginState extends State<Login> {
           return;
         }
 
+        print(response.body); // Affiche la réponse brute de l'API
+        print(responseData); // Affiche le mappage JSON décode
+        print(token); // Affiche le token
+
+        // Extraire les informations de l'utilisateur
+        final user = responseData['user'];
+
+        print(user); // Affiche les informations de l'utilisateur
+
+        // Vérifier si l'objet 'user' est présent dans la réponse
+        if (user == null) {
+          _showErrorDialog(
+              "Informations utilisateur absentes dans la réponse.");
+          return;
+        }
+
         // Enregistrer le token localement pour l'utiliser dans l'application
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('authToken', token);
+        prefs.setString('userNom', user['nom'] ?? 'Non disponible');
+        prefs.setString('userPrenom', user['prenom'] ?? 'Non disponible');
+        prefs.setString('userEmail', user['email'] ?? 'Non disponible');
+        prefs.setString('userAdresse', user['adresse'] ?? 'Non disponible');
+        prefs.setString('userTelephone', user['telephone'] ?? 'Non disponible');
 
-        // Afficher un message de succès
+        // Afficher un message de succès (en bas de l'écran)
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Connexion Réussie!'),
           backgroundColor: Colors.green,

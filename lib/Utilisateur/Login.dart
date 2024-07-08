@@ -79,6 +79,16 @@ class _LoginState extends State<Login> {
         prefs.setString('userAdresse', user['adresse'] ?? 'Non disponible');
         prefs.setString('userTelephone', user['telephone'] ?? 'Non disponible');
 
+        // Ajout des champs pour le département et le garage
+        prefs.setString(
+            'nomDepartement', user['nomDepartement'] ?? 'Non disponible');
+        prefs.setString('adresseDepartement',
+            user['adresseDepartement'] ?? 'Non disponible');
+
+        prefs.setString('nomGarage', user['nomGarage'] ?? 'Non disponible');
+        prefs.setString(
+            'adresseGarage', user['adresseGarage'] ?? 'Non disponible');
+
         // Afficher un message de succès (en bas de l'écran)
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Connexion Réussie!'),

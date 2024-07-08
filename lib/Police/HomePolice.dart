@@ -1,4 +1,4 @@
-import 'package:autoguard_flutter/AccountInfo.dart';
+import 'package:autoguard_flutter/Police/PoliceInfo.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +47,7 @@ class _HomePoliceState extends State<HomePolice> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AccountInfo()),
+                    MaterialPageRoute(builder: (context) => PoliceInfo()),
                   );
                 },
                 icon: Icon(

@@ -66,6 +66,8 @@ class _GarageInfoState extends State<GarageInfo> {
             _buildUserInfoRow('Email', email),
             _buildUserInfoRow('Adresse', adresse),
             _buildUserInfoRow('Téléphone', telephone),
+            _buildUserInfoRow('Nom Garage', nomGarage),
+            _buildUserInfoRow('Adresse Garage', adresseGarage),
             SizedBox(height: 280),
             Center(
               child: ElevatedButton(
@@ -94,12 +96,12 @@ class _GarageInfoState extends State<GarageInfo> {
       child: Row(
         children: [
           Text(
-            '$label: ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            '$label : ',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           Text(
             value ?? 'Non disponible',
-            style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+            style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
           ),
         ],
       ),

@@ -7,7 +7,6 @@ import 'package:autoguard_flutter/Constant.dart';
 import 'package:autoguard_flutter/Clipper.dart';
 import 'package:autoguard_flutter/Colors_code.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
-import 'package:autoguard_flutter/Utilisateur/Home.dart';
 
 class PoliceSign extends StatefulWidget {
   const PoliceSign({Key? key}) : super(key: key);

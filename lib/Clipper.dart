@@ -50,7 +50,7 @@ class PSCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint0 = Paint()
-      ..color = Tcolor.primaryColor2
+      ..color = Tcolor.primaryColor5
       ..style = PaintingStyle.fill
       ..strokeWidth = 1;
 

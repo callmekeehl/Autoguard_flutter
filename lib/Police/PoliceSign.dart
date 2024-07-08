@@ -1,21 +1,22 @@
 import 'dart:convert';
-import 'package:autoguard_flutter/Constant.dart';
-import 'package:autoguard_flutter/Home.dart';
+import 'package:autoguard_flutter/Police/HomePolice.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:autoguard_flutter/Login.dart';
+import 'package:autoguard_flutter/Constant.dart';
 import 'package:autoguard_flutter/Clipper.dart';
 import 'package:autoguard_flutter/Colors_code.dart';
+import 'package:autoguard_flutter/Utilisateur/Login.dart';
+import 'package:autoguard_flutter/Utilisateur/Home.dart';
 
-class Sign extends StatefulWidget {
-  const Sign({Key? key}) : super(key: key);
+class PoliceSign extends StatefulWidget {
+  const PoliceSign({Key? key}) : super(key: key);
 
   @override
-  State<Sign> createState() => _SignState();
+  State<PoliceSign> createState() => _PoliceSignState();
 }
 
-class _SignState extends State<Sign> {
+class _PoliceSignState extends State<PoliceSign> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -23,18 +24,18 @@ class _SignState extends State<Sign> {
   final surnameController = TextEditingController();
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
+  final nomDepartementController = TextEditingController();
+  final adresseDepartementController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
-  // Fonction pour envoyer les données au backend et créer un nouvel utilisateur
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) {
-      // Si le formulaire n'est pas valide, affichez une erreur.
       return;
     }
 
-    // URL de l'API pour l'inscription (assurez-vous de définir votre `url` correctement dans `Constant.dart`)
-    const String _registerUrl = '$url/api/utilisateurs';
+    // URL de l'API pour l'inscription de la police
+    const String _registerUrl = '$url/api/polices';
 
     try {
       final response = await http.post(
@@ -46,7 +47,9 @@ class _SignState extends State<Sign> {
           'email': emailController.text,
           'adresse': addressController.text,
           'telephone': phoneController.text,
-          'motDePasse': passwordController.text
+          'motDePasse': passwordController.text,
+          'nomDepartement': nomDepartementController.text,
+          'adresseDepartement': adresseDepartementController.text
         }),
       );
 
@@ -54,13 +57,10 @@ class _SignState extends State<Sign> {
       print('Response body: ${response.body}');
 
       if (response.statusCode == 201) {
-        // Succès de l'inscription
         final responseData = jsonDecode(response.body);
 
-        // Récupérer le jeton JWT
         String? token = responseData['access_token'];
 
-        // Sauvegarder le jeton et les informations de l'utilisateur dans SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (token != null) {
           await prefs.setString('authToken', token);
@@ -70,8 +70,10 @@ class _SignState extends State<Sign> {
         await prefs.setString('userEmail', emailController.text);
         await prefs.setString('userAdresse', addressController.text);
         await prefs.setString('userTelephone', phoneController.text);
+        await prefs.setString('nomDepartement', nomDepartementController.text);
+        await prefs.setString(
+            'adresseDepartement', adresseDepartementController.text);
 
-        // Afficher unmessage d'avertissement mais avec l'inscription réussie
         if (token == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Compte créé avec succès, mais le jeton est absent'),
@@ -79,17 +81,14 @@ class _SignState extends State<Sign> {
           ));
         }
 
-        // Afficher un message de succès
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Compte créé avec succès!'),
+          content: Text('Compte de police créé avec succès!'),
           backgroundColor: Colors.green,
         ));
 
-        // Naviguer vers la page de connexion
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => Home()));
+            context, MaterialPageRoute(builder: (_) => HomePolice()));
       } else {
-        // Échec de l'inscription, afficher le message d'erreur
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         _showErrorDialog(
             responseData['message'] ?? 'Erreur lors de la création du compte.');
@@ -99,26 +98,6 @@ class _SignState extends State<Sign> {
     }
   }
 
-  Future<void> fetchProtectedResource() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-
-    if (token != null) {
-      final response = await http.get(
-        Uri.parse('$url'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
-
-      // Traitez la réponse comme nécessaire
-    } else {
-      // Gestion de l'absence de jeton
-    }
-  }
-
-  // Fonction pour afficher une boîte de dialogue d'erreur
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -307,154 +286,211 @@ class _SignState extends State<Sign> {
     );
   }
 
+  Widget _buildNomDepartement() {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Entrez le nom du département";
+          }
+          return null;
+        },
+        controller: nomDepartementController,
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14),
+            prefixIcon: Icon(Icons.account_balance),
+            hintText: "Entrer le nom du département"),
+      ),
+    );
+  }
+
+  Widget _buildAdresseDepartement() {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Entrez l'adresse du département";
+          }
+          return null;
+        },
+        controller: adresseDepartementController,
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14),
+            prefixIcon: Icon(Icons.location_city),
+            hintText: "Entrer l'adresse du département"),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     return Scaffold(
+        backgroundColor: Colors.blue.shade100,
         body: SingleChildScrollView(
-      child: Column(
-        children: [
-          Stack(
+          child: Column(
             children: [
-              CustomPaint(
-                size: Size(media.width, 250),
-                painter: RPSCustomPainter(),
-              ),
-              Positioned(
-                  top: 16,
-                  right: -5,
-                  child: CustomPaint(
+              Stack(
+                children: [
+                  CustomPaint(
                     size: Size(media.width, 250),
-                    painter: PSCustomPainter(),
-                  )),
-              Positioned(
-                  top: 140,
-                  left: 30,
+                    painter: RPSCustomPainter(),
+                  ),
+                  Positioned(
+                      top: 16,
+                      right: -5,
+                      child: CustomPaint(
+                        size: Size(media.width, 250),
+                        painter: PSCustomPainter(),
+                      )),
+                  Positioned(
+                      top: 140,
+                      left: 30,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Créer Compte Police",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w800, fontSize: 26),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Veuillez créer un compte pour continuer.",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 17),
+                          )
+                        ],
+                      ))
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 28),
+                child: Form(
+                  key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        "Créer Compte ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800, fontSize: 26),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildName(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildSurname(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildEmail(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildAddress(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildPhone(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildPassword(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildConfirmPassword(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildNomDepartement(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildAdresseDepartement(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: 50,
+                        width: 150,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: LinearGradient(colors: [
+                              Color(0xff9DCEFF),
+                              Color(0xff60b3dc)
+                            ])),
+                        child: InkWell(
+                          onTap: _register,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "CREER",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 17,
+                                    color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                       SizedBox(
-                        height: 5,
+                        height: 50,
                       ),
-                      Text(
-                        "Veuillez creer un compte pour continuer.",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 17),
-                      )
-                    ],
-                  ))
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 28),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildName(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildSurname(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildEmail(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildAddress(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildPhone(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildPassword(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildConfirmPassword(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 150,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        gradient: LinearGradient(
-                            colors: [Color(0xff9DCEFF), Color(0xff60b3dc)])),
-                    child: InkWell(
-                      onTap: _register,
-                      child: Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "CREER",
+                            "Vous avez déjà un compte ? ",
                             style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 17,
-                                color: Colors.white),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
                           ),
-                          SizedBox(
-                            width: 10,
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) => Login()));
+                            },
+                            child: Text(
+                              "Connexion",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Tcolor.primaryColor3),
+                            ),
                           ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          )
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Vous avez déjà un compte ? ",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Login()));
-                        },
-                        child: Text(
-                          "Connexion",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Tcolor.primaryColor3),
-                        ),
+                      SizedBox(
+                        height: 50,
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    ));
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }

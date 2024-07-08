@@ -1,14 +1,14 @@
 import 'package:autoguard_flutter/AccountInfo.dart';
-import 'package:autoguard_flutter/Login.dart';
+import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Home extends StatefulWidget {
+class HomePolice extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _HomePoliceState createState() => _HomePoliceState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePoliceState extends State<HomePolice> {
   @override
   void initState() {
     super.initState();
@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
         ],
       ),
       body: Center(
-        child: Text("Bienvenue à la page d'accueil!"),
+        child: Text("Bienvenue à la page d'accueil Police!"),
       ),
     );
   }

@@ -5,7 +5,7 @@ class Tcolor {
   static Color get primaryColor2 => const Color(0xff9DCEFF);
   static Color get primaryColor3 => const Color(0xff3A9ACB);
   static Color get primaryColor4 => const Color(0xff60b3dc);
-
+  static Color get primaryColor5 => Color.fromARGB(255, 8, 92, 134);
 
   static List<Color> get primaryG => [primaryColor1, primaryColor2];
   static List<Color> get secondaryG => [secondaryColor1, secondaryColor2];

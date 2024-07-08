@@ -1,12 +1,15 @@
 import 'dart:convert';
-import 'package:autoguard_flutter/Home.dart';
+import 'package:autoguard_flutter/Utilisateur/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Clipper.dart';
-import 'Colors_code.dart';
-import 'Sign.dart';
-import 'Constant.dart'; // Assurez-vous que ce fichier contient votre constante `url`
+import '../Clipper.dart';
+import '../Colors_code.dart';
+import '../Type.dart';
+import '../Constant.dart';
+import 'package:autoguard_flutter/Admin/HomeAdmin.dart';
+import 'package:autoguard_flutter/Police/HomePolice.dart';
+import 'package:autoguard_flutter/Garage/HomeGarage.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -82,9 +85,25 @@ class _LoginState extends State<Login> {
           backgroundColor: Colors.green,
         ));
 
-        // Naviguer vers l'écran principal ou tableau de bord
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => Home()));
+        // Naviguer vers l'écran principal
+        // Vérifier le type de l'utilisateur et rediriger en conséquence
+        switch (user['type']) {
+          case 'admin':
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => HomeAdmin()));
+            break;
+          case 'police':
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => HomePolice()));
+            break;
+          case 'garage':
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => HomeGarage()));
+            break;
+          default:
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => Home()));
+        }
       } else {
         // Afficher une erreur si la connexion a échoué
         _showErrorDialog(
@@ -168,6 +187,7 @@ class _LoginState extends State<Login> {
     final media = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Colors.blue.shade100,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -277,7 +297,7 @@ class _LoginState extends State<Login> {
                       InkWell(
                         onTap: () {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Sign()));
+                              MaterialPageRoute(builder: (_) => Type()));
                         },
                         child: Text(
                           "Créer un",

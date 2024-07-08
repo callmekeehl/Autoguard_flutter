@@ -2,17 +2,19 @@ import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AccountInfo extends StatefulWidget {
+class GarageInfo extends StatefulWidget {
   @override
-  _AccountInfoState createState() => _AccountInfoState();
+  _GarageInfoState createState() => _GarageInfoState();
 }
 
-class _AccountInfoState extends State<AccountInfo> {
+class _GarageInfoState extends State<GarageInfo> {
   String? nom;
   String? prenom;
   String? email;
   String? adresse;
   String? telephone;
+  String? nomGarage;
+  String? adresseGarage;
 
   @override
   void initState() {
@@ -39,6 +41,8 @@ class _AccountInfoState extends State<AccountInfo> {
       email = prefs.getString('userEmail') ?? 'Non disponible';
       adresse = prefs.getString('userAdresse') ?? 'Non disponible';
       telephone = prefs.getString('userTelephone') ?? 'Non disponible';
+      nomGarage = prefs.getString('nomGarage') ?? 'Non disponible';
+      adresseGarage = prefs.getString('adresseGarage') ?? 'Non disponible';
     });
   }
 

@@ -50,6 +50,7 @@ class _PoliceInfoState extends State<PoliceInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade100,
       appBar: AppBar(
         title: Text(
           'Informations du Compte',
@@ -57,19 +58,19 @@ class _PoliceInfoState extends State<PoliceInfo> {
         ),
         backgroundColor: Colors.blue[400],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfoRow('Nom', nom),
-            _buildUserInfoRow('Prénom', prenom),
-            _buildUserInfoRow('Email', email),
-            _buildUserInfoRow('Adresse', adresse),
-            _buildUserInfoRow('Téléphone', telephone),
-            _buildUserInfoRow('Nom Departement', nomDepartement),
-            _buildUserInfoRow('Adresse Departement', adresseDepartement),
-            SizedBox(height: 280),
+            _buildInfoCard('Nom', nom),
+            _buildInfoCard('Prenom', prenom),
+            _buildInfoCard('Email', email),
+            _buildInfoCard('Adresse', adresse),
+            _buildInfoCard('Téléphone', telephone),
+            _buildInfoCard('Nom de Département', nomDepartement),
+            _buildInfoCard('Adresse de Département', adresseDepartement),
+            SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: _logout,
@@ -77,7 +78,7 @@ class _PoliceInfoState extends State<PoliceInfo> {
                   backgroundColor: Colors.blue[500],
                 ),
                 child: Text(
-                  'Deconnexion',
+                  'Déconnexion',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -91,20 +92,36 @@ class _PoliceInfoState extends State<PoliceInfo> {
     );
   }
 
-  Widget _buildUserInfoRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Text(
-            '$label : ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          Text(
-            value ?? 'Non disponible',
-            style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
-          ),
-        ],
+  Widget _buildInfoCard(String label, String? value) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue[700]),
+            ),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  value ?? 'Non disponible',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

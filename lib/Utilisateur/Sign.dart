@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
-import 'package:autoguard_flutter/Clipper.dart';
-import 'package:autoguard_flutter/Colors_code.dart';
 
 class Sign extends StatefulWidget {
   const Sign({Key? key}) : super(key: key);
@@ -139,10 +137,6 @@ class _SignState extends State<Sign> {
 
   Widget _buildName() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -152,20 +146,24 @@ class _SignState extends State<Sign> {
         },
         controller: nameController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.person),
-            hintText: "Entrer votre Nom"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Entrer votre Nom",
+          prefixIcon: Icon(
+            Icons.person,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildSurname() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -175,43 +173,50 @@ class _SignState extends State<Sign> {
         },
         controller: surnameController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.person_outline),
-            hintText: "Entrer votre prénom"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Entrer votre Prénom",
+          prefixIcon: Icon(
+            Icons.person_outline,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildEmail() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Entrez votre Email";
-          }
-          return null;
-        },
-        controller: emailController,
-        decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.email_outlined),
-            hintText: "Entrer votre email"),
-      ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Entrez votre Email";
+            }
+            return null;
+          },
+          controller: emailController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Color(0xFFE7EDEB),
+            hintText: "Entrer votre Email",
+            prefixIcon: Icon(
+              Icons.mail,
+              color: Colors.grey[600],
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          )),
     );
   }
 
   Widget _buildAddress() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -221,20 +226,24 @@ class _SignState extends State<Sign> {
         },
         controller: addressController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.home_outlined),
-            hintText: "Entrer votre adresse"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Entrer votre Adresse",
+          prefixIcon: Icon(
+            Icons.home_outlined,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildPhone() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
         keyboardType: TextInputType.phone,
         validator: (value) {
@@ -245,20 +254,24 @@ class _SignState extends State<Sign> {
         },
         controller: phoneController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.phone),
-            hintText: "Entrer votre téléphone"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Numéro de téléphone",
+          prefixIcon: Icon(
+            Icons.phone,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildPassword() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
         obscureText: true,
         validator: (value) {
@@ -272,20 +285,24 @@ class _SignState extends State<Sign> {
         },
         controller: passwordController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.lock_outline_rounded),
-            hintText: "Entrer votre mot de passe"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Entrer votre mot de passe",
+          prefixIcon: Icon(
+            Icons.lock_outline_rounded,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildConfirmPassword() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(4, 4), color: Colors.cyan)]),
       child: TextFormField(
         obscureText: true,
         validator: (value) {
@@ -299,10 +316,18 @@ class _SignState extends State<Sign> {
         },
         controller: confirmPasswordController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.lock),
-            hintText: "Confirmez votre mot de passe"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Confirmer votre mot de passe",
+          prefixIcon: Icon(
+            Icons.lock,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
@@ -311,153 +336,154 @@ class _SignState extends State<Sign> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Colors.blue.shade100,
-        body: SingleChildScrollView(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: media.width,
+            maxHeight: media.height,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue.shade800,
+                Colors.blue.shade400,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(media.width, 250),
-                    painter: RPSCustomPainter(),
-                  ),
-                  Positioned(
-                      top: 16,
-                      right: -5,
-                      child: CustomPaint(
-                        size: Size(media.width, 250),
-                        painter: PSCustomPainter(),
-                      )),
-                  Positioned(
-                      top: 140,
-                      left: 30,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Créer Compte ",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 26),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Veuillez creer un compte pour continuer.",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 17),
-                          )
-                        ],
-                      ))
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 28),
-                child: Form(
-                  key: _formKey,
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 36.0, horizontal: 24.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildName(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildSurname(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildEmail(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildAddress(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildPhone(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildPassword(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildConfirmPassword(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        height: 50,
-                        width: 150,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            gradient: LinearGradient(colors: [
-                              Color(0xff9DCEFF),
-                              Color(0xff60b3dc)
-                            ])),
-                        child: InkWell(
-                          onTap: _register,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "CREER",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 17,
-                                    color: Colors.white),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              )
-                            ],
-                          ),
+                      Text(
+                        "Création de compte",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       SizedBox(
-                        height: 50,
+                        height: 5.0,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Vous avez déjà un compte ? ",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (_) => Login()));
-                            },
-                            child: Text(
-                              "Connexion",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: Tcolor.primaryColor3),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
+                      Text(
+                        "Créer un compte pour continuer",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      )
                     ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      )),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildName(),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            _buildSurname(),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            _buildEmail(),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            _buildAddress(),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            _buildPhone(),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            _buildPassword(),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            _buildConfirmPassword(),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            SizedBox(
+                              height: 50.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue.shade600),
+                                onPressed: _register,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 18.0),
+                                  child: Text(
+                                    "Creer",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 80.0,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (_) => Login()));
+                              },
+                              child: Text(
+                                "Déjà un compte ? Connectez-vous",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.blue.shade800),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:autoguard_flutter/Colors_code.dart';
+import 'package:autoguard_flutter/Type.dart';
 import 'package:autoguard_flutter/Utilisateur/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Clipper.dart';
-import '../Colors_code.dart';
-import '../Type.dart';
+
 import '../Constant.dart';
 import 'package:autoguard_flutter/Admin/HomeAdmin.dart';
 import 'package:autoguard_flutter/Police/HomePolice.dart';
@@ -146,12 +146,7 @@ class _LoginState extends State<Login> {
 
   // Widgets pour les champs de texte
   Widget _buildEmail() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
-      child: TextFormField(
+    return TextFormField(
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Entrez votre Email";
@@ -160,20 +155,22 @@ class _LoginState extends State<Login> {
         },
         controller: emailController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.email_outlined), // Icone d'email
-            hintText: "Entrer votre email"),
-      ),
-    );
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Entrer votre Email",
+          prefixIcon: Icon(
+            Icons.mail,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ));
   }
 
   Widget _buildPassword() {
     return Container(
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(offset: Offset(3, 3), color: Colors.cyan)]),
       child: TextFormField(
         obscureText: true, // Masquer le mot de passe
         validator: (value) {
@@ -184,10 +181,18 @@ class _LoginState extends State<Login> {
         },
         controller: passwordController,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14),
-            prefixIcon: Icon(Icons.lock_outline_rounded), // Icone de verrou
-            hintText: "Entrer votre Mot de passe"),
+          filled: true,
+          fillColor: Color(0xFFE7EDEB),
+          hintText: "Entrer votre mot de passe",
+          prefixIcon: Icon(
+            Icons.lock_rounded,
+            color: Colors.grey[600],
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
@@ -197,135 +202,140 @@ class _LoginState extends State<Login> {
     final media = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.blue.shade100,
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                CustomPaint(
-                  size: Size(media.width, 250),
-                  painter: RPSCustomPainter(),
-                ),
-                Positioned(
-                    top: 16,
-                    right: -5,
-                    child: CustomPaint(
-                      size: Size(media.width, 250),
-                      painter: PSCustomPainter(),
-                    )),
-                Positioned(
-                    top: 220,
-                    left: 30,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Connexion",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800, fontSize: 26),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Veuillez vous connecter pour continuer.",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 17),
-                        )
-                      ],
-                    ))
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: media.width,
+            maxHeight: media.height,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue.shade800,
+                Colors.blue.shade400,
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.centerRight,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: 25,
-                  ),
-                  _buildEmail(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildPassword(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text("Mot de passe oublié ?",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Tcolor.primaryColor3)),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: _login, // Ajout du gestionnaire de connexion
-                    child: Container(
-                      height: 50,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: LinearGradient(
-                              colors: [Color(0xff9DCEFF), Color(0xff60b3dc)])),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Connexion",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 17,
-                                color: Colors.white),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 150,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 36.0, horizontal: 24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Pas de compte ? ",
+                        "Connexion",
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Type()));
-                        },
-                        child: Text(
-                          "Créer un",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Tcolor.primaryColor3),
+                          color: Colors.white,
+                          fontSize: 42.0,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Text(
+                        "Connectez-vous pour continuer",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      )
                     ],
                   ),
-                  SizedBox(
-                      height:
-                          30), // Espace supplémentaire pour éviter le recouvrement par le clavier
-                ],
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 5,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildEmail(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _buildPassword(),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Mot de passe oublié ?",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: Colors.blue[800],
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue.shade600),
+                            onPressed: _login,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 18.0),
+                              child: Text(
+                                "Connexion",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 80.0,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (_) => Type()));
+                          },
+                          child: Text(
+                            "Pas de compte ? Créer un",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.blue.shade800),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

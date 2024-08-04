@@ -325,7 +325,7 @@ class _PoliceSignState extends State<PoliceSign> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Color(0xFFE7EDEB),
-          hintText: "Entrer le nom du garage",
+          hintText: "Entrer le nom du département",
           prefixIcon: Icon(
             Icons.account_balance,
             color: Colors.grey[600],
@@ -352,7 +352,7 @@ class _PoliceSignState extends State<PoliceSign> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Color(0xFFE7EDEB),
-          hintText: "Entrer l'adresse du garage",
+          hintText: "Entrer l'adresse du département",
           prefixIcon: Icon(
             Icons.location_city,
             color: Colors.grey[600],

@@ -54,9 +54,9 @@ class _LoginState extends State<Login> {
           return;
         }
 
-        print(response.body); // Affiche la réponse brute de l'API
-        print(responseData); // Affiche le mappage JSON décode
-        print(token); // Affiche le token
+        print(response.body); // Afficher la réponse brute de l'API
+        print(responseData); // Afficher le mappage JSON décode
+        print(token); // Afficher le token
 
         // Extraire les informations de l'utilisateur
         final user = responseData['user'];
@@ -73,11 +73,18 @@ class _LoginState extends State<Login> {
         // Enregistrer le token localement pour l'utiliser dans l'application
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('authToken', token);
+        prefs.setInt('userId', user['utilisateurId'] ?? 'Non disponible');
         prefs.setString('userNom', user['nom'] ?? 'Non disponible');
         prefs.setString('userPrenom', user['prenom'] ?? 'Non disponible');
         prefs.setString('userEmail', user['email'] ?? 'Non disponible');
         prefs.setString('userAdresse', user['adresse'] ?? 'Non disponible');
         prefs.setString('userTelephone', user['telephone'] ?? 'Non disponible');
+
+        // Stocker utilisateurId
+        final utilisateurId = user['utilisateurId'];
+        if (utilisateurId != null) {
+          prefs.setInt('utilisateurId', utilisateurId);
+        }
 
         // Ajout des champs pour le département et le garage
         prefs.setString(

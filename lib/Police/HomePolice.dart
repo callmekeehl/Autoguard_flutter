@@ -1,10 +1,12 @@
 import 'package:autoguard_flutter/Fonction/Notif.dart';
-import 'package:autoguard_flutter/Fonction/Rdv.dart';
+import 'package:autoguard_flutter/Fonction/DemandeRdv.dart';
 import 'package:autoguard_flutter/Fonction/Signal.dart';
 import 'package:autoguard_flutter/Fonction/Verification.dart';
+import 'package:autoguard_flutter/Police/ListeRdv.dart';
 import 'package:autoguard_flutter/Police/PoliceInfo.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePolice extends StatefulWidget {
@@ -40,7 +42,7 @@ class _HomePoliceState extends State<HomePolice> {
   void _navigateToRdv() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Rdv()),
+      MaterialPageRoute(builder: (context) => ListeRdv()),
     );
   }
 
@@ -215,7 +217,7 @@ class _HomePoliceState extends State<HomePolice> {
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez prendre ici \nun rendez-vous avec les \nautorités",
+                                            "Vous pouvez consulter ici \n la liste des demandes de rdv \npar les utilisateurs",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),

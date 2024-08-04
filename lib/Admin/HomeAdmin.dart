@@ -1,6 +1,6 @@
 import 'package:autoguard_flutter/AccountInfo.dart';
 import 'package:autoguard_flutter/Fonction/Notif.dart';
-import 'package:autoguard_flutter/Fonction/Rdv.dart';
+import 'package:autoguard_flutter/Fonction/DemandeRdv.dart';
 import 'package:autoguard_flutter/Fonction/Signal.dart';
 import 'package:autoguard_flutter/Fonction/Verification.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
@@ -40,7 +40,7 @@ class _HomeAdminState extends State<HomeAdmin> {
   void _navigateToRdv() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Rdv()),
+      MaterialPageRoute(builder: (context) => DemandeRdv()),
     );
   }
 

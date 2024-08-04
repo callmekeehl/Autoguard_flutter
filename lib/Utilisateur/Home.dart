@@ -1,6 +1,6 @@
 import 'package:autoguard_flutter/AccountInfo.dart';
 import 'package:autoguard_flutter/Fonction/Notif.dart';
-import 'package:autoguard_flutter/Fonction/Rdv.dart';
+import 'package:autoguard_flutter/Fonction/DemandeRdv.dart';
 import 'package:autoguard_flutter/Fonction/Signal.dart';
 import 'package:autoguard_flutter/Fonction/Verification.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
   void _navigateToRdv() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Rdv()),
+      MaterialPageRoute(builder: (context) => DemandeRdv()),
     );
   }
 
@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
                             icon: Icon(
                               Icons.account_circle_outlined,
                               color: Colors.white,
-                              size: 36,
+                              size: 40,
                             ),
                           )
                         ],

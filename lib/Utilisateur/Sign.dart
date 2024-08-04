@@ -57,12 +57,25 @@ class _SignState extends State<Sign> {
 
         // Récupérer le jeton JWT
         String? token = responseData['access_token'];
+        int? userId;
+
+        if (responseData['user_id'] != null) {
+          // Convertir l'ID utilisateur en entier s'il est renvoyé en tant que chaîne de caractères
+          userId = int.tryParse(responseData['user_id'].toString());
+        }
+
+        if (userId == null) {
+          _showErrorDialog('ID utilisateur non trouvé ou incorrect.');
+          return;
+        }
 
         // Sauvegarder le jeton et les informations de l'utilisateur dans SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (token != null) {
           await prefs.setString('authToken', token);
         }
+
+        await prefs.setInt('userId', userId);
         await prefs.setString('userNom', nameController.text);
         await prefs.setString('userPrenom', surnameController.text);
         await prefs.setString('userEmail', emailController.text);
@@ -99,7 +112,7 @@ class _SignState extends State<Sign> {
 
   Future<void> fetchProtectedResource() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? token = prefs.getString('authToken');
 
     if (token != null) {
       final response = await http.get(

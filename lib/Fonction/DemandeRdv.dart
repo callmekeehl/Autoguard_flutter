@@ -18,12 +18,95 @@ class _DemandeRdvState extends State<DemandeRdv> {
   String? adresse;
   String? telephone;
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
   TextEditingController _motifController = TextEditingController();
+  final dateHeureController = TextEditingController();
+  DateTime? selectedDateTime;
+
+  Future<void> _selectDateTime(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTime ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (pickedTime != null) {
+        setState(() {
+          selectedDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          dateHeureController.text =
+              '${selectedDateTime!.toLocal()}'.split(' ')[0] +
+                  ' ${pickedTime.format(context)}';
+        });
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Erreur"),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateTimeField() {
+    return GestureDetector(
+      onTap: () async {
+        await _selectDateTime(context);
+      },
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: dateHeureController,
+          decoration: InputDecoration(
+            labelText: 'Date et Heure',
+            icon: Icon(Icons.calendar_today),
+            filled: true,
+            fillColor: Color(0xFFE7EDEB),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          validator: (value) {
+            if (selectedDateTime == null) {
+              return 'Veuillez sélectionner une date et une heure';
+            }
+            return null;
+          },
+        ),
+      ),
+    );
+  }
 
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        isLoading = true;
+      });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('authToken');
+      userId = prefs.getInt('userId'); // Assurez-vous que l'utilisateurId est stocké
 
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -34,37 +117,44 @@ class _DemandeRdvState extends State<DemandeRdv> {
         return;
       }
 
-      String motif = _motifController.text;
+      final motif = _motifController.text;
+      final dateHeure = selectedDateTime?.toIso8601String();
 
-      final response = await http.post(
-        Uri.parse('$url/api/motifs'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'utilisateurId': userId,
-          'motifDescription': motif,
-        }),
-      );
+      final motifData = {
+        'utilisateurId': userId,
+        'motifDescription': motif,
+        'date': dateHeure,
+      };
 
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Demande de rendez-vous soumise avec succès.'),
-            backgroundColor: Colors.green,
-          ),
+      try {
+        final response = await http.post(
+          Uri.parse('$url/api/motifs'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(motifData),
         );
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => Home()));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Erreur lors de la soumission de la demande de rendez-vous.'),
-            backgroundColor: Colors.red.shade500,
-          ),
-        );
+
+        if (response.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Demande de rendez-vous soumise avec succès.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => Home()));
+        } else {
+          _showErrorDialog(
+              'Erreur lors de la soumission de la demande de rendez-vous.');
+        }
+      } catch (e) {
+        _showErrorDialog("Une erreur est survenue: ${e.toString()}");
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
@@ -72,7 +162,7 @@ class _DemandeRdvState extends State<DemandeRdv> {
   Future<void> _loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userId = (prefs.getInt('utilisateurId') ?? 'Non disponible') as int?;
+      userId = prefs.getInt('userId');
       nom = prefs.getString('userNom') ?? 'Non disponible';
       prenom = prefs.getString('userPrenom') ?? 'Non disponible';
       email = prefs.getString('userEmail') ?? 'Non disponible';
@@ -111,6 +201,10 @@ class _DemandeRdvState extends State<DemandeRdv> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+                      onPressed: () => Navigator.pop(context),
+                    ),
                     Text(
                       "Demande de Rendez-vous",
                       style: TextStyle(
@@ -161,14 +255,27 @@ class _DemandeRdvState extends State<DemandeRdv> {
                           },
                         ),
                         SizedBox(height: 20),
+                        _buildDateTimeField(),
+                        SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: _submitForm,
-                          child: Text(
-                            'Soumettre la demande',
-                            style: TextStyle(color: Colors.white),
+                          onPressed: isLoading ? null : _submitForm,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 18.0),
+                            child: isLoading
+                                ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white),
+                            )
+                                : Text(
+                              "Soumettre",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                              ),
+                            ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue.shade400,
+                            backgroundColor: Colors.blue.shade600,
                           ),
                         ),
                       ],

@@ -14,6 +14,7 @@ class Sign extends StatefulWidget {
 }
 
 class _SignState extends State<Sign> {
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -26,7 +27,14 @@ class _SignState extends State<Sign> {
 
   // Fonction pour envoyer les données au backend et créer un nouvel utilisateur
   Future<void> _register() async {
+    setState(() {
+      isLoading = true;
+    });
+
     if (!_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = false;
+      });
       // Si le formulaire n'est pas valide, affichez une erreur.
       return;
     }
@@ -66,6 +74,9 @@ class _SignState extends State<Sign> {
 
         if (userId == null) {
           _showErrorDialog('ID utilisateur non trouvé ou incorrect.');
+          setState(() {
+            isLoading = false;
+          });
           return;
         }
 
@@ -95,7 +106,9 @@ class _SignState extends State<Sign> {
           content: Text('Compte créé avec succès!'),
           backgroundColor: Colors.green,
         ));
-
+        setState(() {
+          isLoading = false;
+        });
         // Naviguer vers la page de connexion
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => Home()));
@@ -104,9 +117,15 @@ class _SignState extends State<Sign> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         _showErrorDialog(
             responseData['message'] ?? 'Erreur lors de la création du compte.');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       _showErrorDialog('Une erreur est survenue: ${e.toString()}');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -379,6 +398,10 @@ class _SignState extends State<Sign> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                       Text(
                         "Création de compte",
                         style: TextStyle(
@@ -456,11 +479,14 @@ class _SignState extends State<Sign> {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue.shade600),
-                                onPressed: _register,
+                                onPressed: isLoading ? null : _register,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 18.0),
-                                  child: Text(
+                                  child: isLoading
+                                      ? CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ) : Text(
                                     "Creer",
                                     style: TextStyle(
                                       color: Colors.white,

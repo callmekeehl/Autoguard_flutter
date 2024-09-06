@@ -23,7 +23,7 @@ class _AccountInfoState extends State<AccountInfo> {
 
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Effacer toutes les informations de l'utilisateur
+    await prefs.clear(); // Effacer toutes les informations de connexion de l'utilisateur
 
     // Naviguer vers l'écran de connexion
     Navigator.pushReplacement(
@@ -48,6 +48,10 @@ class _AccountInfoState extends State<AccountInfo> {
     return Scaffold(
       backgroundColor: Colors.blueGrey.shade100,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           'Informations du Compte',
           style: TextStyle(color: Colors.white),

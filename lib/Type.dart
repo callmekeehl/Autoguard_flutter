@@ -48,6 +48,10 @@ class _TypeState extends State<Type> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                       Text(
                         "Type",
                         style: TextStyle(
@@ -152,30 +156,6 @@ class _TypeState extends State<Type> {
                         ),
                         SizedBox(
                           height: 10.0,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue.shade600),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => PoliceSign()));
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 18.0),
-                              child: Text(
-                                "Compte Police",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                          ),
                         ),
                         SizedBox(
                           height: 30.0,

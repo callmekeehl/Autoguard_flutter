@@ -60,7 +60,6 @@ class _HomeGarageState extends State<HomeGarage> {
 
   @override
   Widget build(BuildContext context) {
-    // Construisez l'interface utilisateur de la page Home ici
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -171,8 +170,9 @@ class _HomeGarageState extends State<HomeGarage> {
                                           Text(
                                             "Faire un signalement",
                                             style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20),
+                                                fontSize: 17),
                                           ),
                                           Text(
                                             "Vous pouvez déclarer ici \nun véhicule volé ou perdu",
@@ -211,6 +211,7 @@ class _HomeGarageState extends State<HomeGarage> {
                                           Text(
                                             "Rendez-vous",
                                             style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
@@ -251,6 +252,7 @@ class _HomeGarageState extends State<HomeGarage> {
                                           Text(
                                             "Notifications",
                                             style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
@@ -291,6 +293,7 @@ class _HomeGarageState extends State<HomeGarage> {
                                           Text(
                                             "Vérification",
                                             style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),

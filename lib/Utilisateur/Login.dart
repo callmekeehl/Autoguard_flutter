@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:autoguard_flutter/Colors_code.dart';
 import 'package:autoguard_flutter/Type.dart';
 import 'package:autoguard_flutter/Utilisateur/Home.dart';
 import 'package:flutter/material.dart';
@@ -19,16 +18,24 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   // Fonction pour gérer la connexion
   Future<void> _login() async {
+
+    setState(() {
+      isLoading = true;
+    });
     final String email = emailController.text;
     final String password = passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
       _showErrorDialog("Veuillez remplir tous les champs.");
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -51,6 +58,9 @@ class _LoginState extends State<Login> {
         final token = responseData['token'];
         if (token == null) {
           _showErrorDialog("Token absent dans la réponse.");
+          setState(() {
+            isLoading = false;
+          });
           return;
         }
 
@@ -67,6 +77,9 @@ class _LoginState extends State<Login> {
         if (user == null) {
           _showErrorDialog(
               "Informations utilisateur absentes dans la réponse.");
+          setState(() {
+            isLoading = false;
+          });
           return;
         }
 
@@ -86,6 +99,19 @@ class _LoginState extends State<Login> {
           prefs.setInt('utilisateurId', utilisateurId);
         }
 
+        if (user['type'] == 'police') {
+          await prefs.setInt('policeId', user['policeId']);
+          await prefs.setString('nomDepartement', user['nomDepartement']);
+          await prefs.setString(
+              'adresseDepartement', user['adresseDepartement']);
+        }
+
+        if (user['type'] == 'garage') {
+          await prefs.setInt('garageId', user['garageId']);
+          await prefs.setString('nomGarage', user['nomGarage']);
+          await prefs.setString('adresseGarage', user['adresseGarage']);
+        }
+
         // Ajout des champs pour le département et le garage
         prefs.setString(
             'nomDepartement', user['nomDepartement'] ?? 'Non disponible');
@@ -101,6 +127,10 @@ class _LoginState extends State<Login> {
           content: Text('Connexion Réussie!'),
           backgroundColor: Colors.green,
         ));
+
+        setState(() {
+          isLoading = false;
+        });
 
         // Naviguer vers l'écran principal
         // Vérifier le type de l'utilisateur et rediriger en conséquence
@@ -125,10 +155,16 @@ class _LoginState extends State<Login> {
         // Afficher une erreur si la connexion a échoué
         _showErrorDialog(
             "Erreur de connexion. Veuillez vérifier vos informations.");
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       // Gérer toute autre exception possible
       _showErrorDialog("Une erreur est survenue: ${e.toString()}");
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -306,11 +342,11 @@ class _LoginState extends State<Login> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue.shade600),
-                            onPressed: _login,
+                            onPressed: isLoading ? null : _login,
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 18.0),
-                              child: Text(
+                              child: isLoading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),) : Text(
                                 "Connexion",
                                 style: TextStyle(
                                   color: Colors.white,

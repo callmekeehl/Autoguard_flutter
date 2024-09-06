@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 
 class Signal extends StatefulWidget {
   @override
@@ -12,11 +13,12 @@ class Signal extends StatefulWidget {
 }
 
 class _SignalState extends State<Signal> {
+  bool isLoading = false;
   final nomProprioController = TextEditingController();
   final prenomProprioController = TextEditingController();
   final telephoneProprioController = TextEditingController();
-  final lieuLongController = TextEditingController();
-  final lieuLatController = TextEditingController();
+  late var lieuLongController = TextEditingController();
+  late var lieuLatController = TextEditingController();
   final numChassisController = TextEditingController();
   final numPlaqueController = TextEditingController();
   final marqueController = TextEditingController();
@@ -25,6 +27,16 @@ class _SignalState extends State<Signal> {
 
   File? _imageFile;
   String? _photoCarteGriseBase64;
+  late MapZoomPanBehavior _zoomPanBehavior;
+  late MapTileLayerController _mapController;
+  MapLatLng _selectedPosition = MapLatLng(6.125552372407288, 1.2103758524443544); // IAI par défaut
+
+  @override
+  void initState() {
+    super.initState();
+    _zoomPanBehavior = MapZoomPanBehavior();
+    _mapController = MapTileLayerController();
+  }
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -44,7 +56,7 @@ class _SignalState extends State<Signal> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
     if (picked != null) {
       setState(() {
@@ -96,12 +108,18 @@ class _SignalState extends State<Signal> {
     if (!_validateFields()) {
       return;
     }
+    setState(() {
+      isLoading = true;
+    });
     final prefs = await SharedPreferences.getInstance();
     final utilisateurId = prefs
-        .getInt('utilisateurId'); // Assurez-vous que l'utilisateurId est stocké
+        .getInt('userId'); // Assurez-vous que l'utilisateurId est stocké
 
     if (utilisateurId == null) {
       _showErrorDialog("Utilisateur non identifié. Veuillez vous reconnecter.");
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -144,6 +162,10 @@ class _SignalState extends State<Signal> {
       }
     } catch (e) {
       _showErrorDialog("Une erreur est survenue: ${e.toString()}");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -205,6 +227,46 @@ class _SignalState extends State<Signal> {
     );
   }
 
+  Widget _buildMapSelector() {
+    return GestureDetector(
+      onTapUp: (TapUpDetails details) {
+        // Conversion des coordonnées de l'écran vers les coordonnées de la carte
+        MapLatLng latLng = _mapController.pixelToLatLng(details.localPosition);
+
+        setState(() {
+          _selectedPosition = latLng;
+          lieuLatController.text = latLng.latitude.toString();
+          lieuLongController.text = latLng.longitude.toString();
+        });
+      },
+      child: Container(
+        height: 300,
+        child: SfMaps(
+          layers: [
+            MapTileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              initialZoomLevel: 15,
+              initialFocalLatLng: _selectedPosition,
+              zoomPanBehavior: _zoomPanBehavior,
+              controller: _mapController,
+              initialMarkersCount: 1,
+              markerBuilder: (BuildContext context, int index) {
+                return MapMarker(
+                  latitude: _selectedPosition.latitude,
+                  longitude: _selectedPosition.longitude,
+                  child: Icon(Icons.location_on, color: Colors.blue),
+
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -239,6 +301,10 @@ class _SignalState extends State<Signal> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                       Text(
                         "Signalement",
                         style: TextStyle(
@@ -284,9 +350,7 @@ class _SignalState extends State<Signal> {
                         _buildTextField("Téléphone Propriétaire",
                             telephoneProprioController),
                         SizedBox(height: 20.0),
-                        _buildTextField("Lieu Longitude", lieuLongController),
-                        SizedBox(height: 20.0),
-                        _buildTextField("Lieu Latitude", lieuLatController),
+                        _buildMapSelector(),
                         SizedBox(height: 20.0),
                         // Bouton pour choisir l'image
                         ElevatedButton(
@@ -316,11 +380,14 @@ class _SignalState extends State<Signal> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue.shade600,
                             ),
-                            onPressed: _submitDeclaration,
+                            onPressed: isLoading ? null : _submitDeclaration,
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 18.0),
-                              child: Text(
+                              child: isLoading
+                                  ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ) : Text(
                                 "Soumettre",
                                 style: TextStyle(
                                   color: Colors.white,

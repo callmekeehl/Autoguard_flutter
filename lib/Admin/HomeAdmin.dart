@@ -1,8 +1,12 @@
 import 'package:autoguard_flutter/AccountInfo.dart';
+import 'package:autoguard_flutter/Admin/ListDeclaration.dart';
+import 'package:autoguard_flutter/Admin/ListGarage.dart';
+import 'package:autoguard_flutter/Admin/ListNotification.dart';
+import 'package:autoguard_flutter/Admin/ListPolice.dart';
+import 'package:autoguard_flutter/Admin/ListRdv.dart';
+import 'package:autoguard_flutter/Admin/ListUtilisateur.dart';
 import 'package:autoguard_flutter/Fonction/Notif.dart';
 import 'package:autoguard_flutter/Fonction/DemandeRdv.dart';
-import 'package:autoguard_flutter/Fonction/Signal.dart';
-import 'package:autoguard_flutter/Fonction/Verification.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,31 +34,45 @@ class _HomeAdminState extends State<HomeAdmin> {
     } else {}
   }
 
-  void _navigateToSignalement() {
+  void _navigateToUtilisateur() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Signal()),
+      MaterialPageRoute(builder: (context) => ListUtilisateur()),
+    );
+  }
+
+  void _navigateToDeclaration() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListDeclaration()),
     );
   }
 
   void _navigateToRdv() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => DemandeRdv()),
+      MaterialPageRoute(builder: (context) => ListRdv()),
     );
   }
 
   void _navigateToNotification() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Notif()),
+      MaterialPageRoute(builder: (context) => ListNotification()),
     );
   }
 
-  void _navigateToVerification() {
+  void _navigateToGarage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Verification()),
+      MaterialPageRoute(builder: (context) => ListGarage()),
+    );
+  }
+
+  void _navigateToPolice() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListPolice()),
     );
   }
 
@@ -151,7 +169,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                         Column(
                           children: [
                             GestureDetector(
-                              onTap: () => _navigateToSignalement(),
+                              onTap: () => _navigateToUtilisateur(),
                               child: Card(
                                 margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
                                 color: Colors.blue.shade200,
@@ -160,22 +178,60 @@ class _HomeAdminState extends State<HomeAdmin> {
                                   padding: EdgeInsets.all(15),
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        "./assets/images/theft.png",
-                                        height: 80,
-                                      ),
+                                      Icon(Icons.person,
+                                          size: 80, color: Colors.black54),
+                                      SizedBox(width: 20),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Faire un signalement",
+                                            "Utilisateur",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez déclarer ici \nun véhicule volé ou perdu",
+                                            "Gérez les utilisateurs \nde l'application",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            GestureDetector(
+                              onTap: () => _navigateToDeclaration(),
+                              child: Card(
+                                margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
+                                color: Colors.blue.shade200,
+                                elevation: 14,
+                                child: Container(
+                                  padding: EdgeInsets.all(15),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.report,
+                                          size: 80, color: Colors.black54),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Déclaration",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                          Text(
+                                            "Listes des véhicules \nvolés ou perdus",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),
@@ -200,10 +256,9 @@ class _HomeAdminState extends State<HomeAdmin> {
                                   padding: EdgeInsets.all(15),
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        "./assets/images/rdv.png",
-                                        height: 80,
-                                      ),
+                                      Icon(Icons.calendar_month,
+                                          size: 80, color: Colors.black54),
+                                      SizedBox(width: 20),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -215,7 +270,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez prendre ici \nun rendez-vous avec les \nautorités",
+                                            "Listes des rendez-vous \navec les autorités",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),
@@ -240,10 +295,9 @@ class _HomeAdminState extends State<HomeAdmin> {
                                   padding: EdgeInsets.all(15),
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        "./assets/images/notification.png",
-                                        height: 80,
-                                      ),
+                                      Icon(Icons.notification_important,
+                                          size: 80, color: Colors.black54),
+                                      SizedBox(width: 20),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -255,7 +309,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez voir ici \nvos notifications",
+                                            "Gérez toutes les notifications",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),
@@ -271,7 +325,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                               height: 25,
                             ),
                             GestureDetector(
-                              onTap: () => _navigateToVerification(),
+                              onTap: () => _navigateToGarage(),
                               child: Card(
                                 margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
                                 color: Colors.blue.shade200,
@@ -280,22 +334,60 @@ class _HomeAdminState extends State<HomeAdmin> {
                                   padding: EdgeInsets.all(15),
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        "./assets/images/check.png",
-                                        height: 80,
-                                      ),
+                                      Icon(Icons.garage_rounded,
+                                          size: 80, color: Colors.black54),
+                                      SizedBox(width: 20),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Vérification",
+                                            "Garage",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez faire ici \nles vérifications des \nvéhicules suspects",
+                                            "Gérez les garages",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            GestureDetector(
+                              onTap: () => _navigateToPolice(),
+                              child: Card(
+                                margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
+                                color: Colors.blue.shade200,
+                                elevation: 14,
+                                child: Container(
+                                  padding: EdgeInsets.all(15),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.local_police,
+                                          size: 80, color: Colors.black54),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Police",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                          Text(
+                                            "Gérez les comptes police",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),

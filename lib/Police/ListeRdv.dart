@@ -11,23 +11,14 @@ class ListeRdv extends StatefulWidget {
 
 class _ListeRdvState extends State<ListeRdv> {
   List<dynamic> motifs = [];
-  int? policeId;
-  DateTime? selectedDate;
-  bool isEditing = false;
-  int? editingMotifId;
+  Map<int, Map<String, String>> utilisateurs = {}; // Map pour stocker les détails des utilisateurs
+  bool isLoading = true;
+  String errorMessage = '';
 
   @override
   void initState() {
     super.initState();
     _loadMotifs();
-    _loadUserInfo();
-  }
-
-  Future<void> _loadUserInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      policeId = prefs.getInt('policeId');
-    });
   }
 
   Future<void> _loadMotifs() async {
@@ -42,135 +33,242 @@ class _ListeRdvState extends State<ListeRdv> {
     );
 
     if (response.statusCode == 200) {
+      try {
+        List<dynamic> fetchedMotifs = jsonDecode(response.body);
+        setState(() {
+          motifs = fetchedMotifs;
+        });
+
+        // Charger les détails des utilisateurs
+        for (var motif in fetchedMotifs) {
+          int utilisateurId = motif['utilisateurId'];
+          if (!utilisateurs.containsKey(utilisateurId)) {
+            await _loadUtilisateurDetails(utilisateurId);
+          }
+        }
+        setState(() {
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          errorMessage = 'Erreur de parsing des données JSON';
+          isLoading = false;
+        });
+      }
+    } else {
       setState(() {
-        motifs = jsonDecode(response.body);
+        errorMessage =
+        'Erreur de chargement des motifs: ${response.reasonPhrase}';
+        isLoading = false;
       });
     }
   }
 
-  Future<void> _enregistrerRdv(int utilisateurId, String motif) async {
+  Future<void> _loadUtilisateurDetails(int utilisateurId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('authToken');
 
-    final response = await http.post(
-      Uri.parse('$url/api/rdvs'),
+    final response = await http.get(
+      Uri.parse('$url/api/utilisateurs/$utilisateurId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> utilisateurData = jsonDecode(response.body);
+      setState(() {
+        utilisateurs[utilisateurId] = {
+          'nom': utilisateurData['nom'] ?? 'Inconnu',
+          'prenom': utilisateurData['prenom'] ?? 'Inconnu',
+        };
+      });
+    } else {
+      setState(() {
+        utilisateurs[utilisateurId] = {
+          'nom': 'Erreur',
+          'prenom': 'Erreur',
+        };
+      });
+    }
+  }
+
+  Future<void> _accepterRdv(int motifId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('authToken');
+    int? policeId = prefs.getInt('policeId');
+    if (policeId == null) {
+      // Erreur de récupération du policeId
+      print('PoliceId null');
+    }
+
+
+    final response = await http.put(
+      Uri.parse('$url/api/rdvs/accept/$motifId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-        'utilisateurId': utilisateurId,
         'policeId': policeId,
-        'date': selectedDate?.toIso8601String(),
-        'motif': motif,
+        'message': 'Votre Rendez-vous a été confirmer avec succès',
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
+      setState(() {
+        _loadMotifs(); // Recharger la liste
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Rendez-vous enregistré avec succès.'),
+          content: Text('Rendez-vous accepté et notification envoyée.'),
           backgroundColor: Colors.green,
         ),
       );
-      _loadMotifs();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erreur lors de l\'enregistrement du rendez-vous.'),
+          content: Text('Erreur lors de l\'acceptation du rendez-vous.'),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
 
-  Future<Map<String, dynamic>?> _getUtilisateurInfo(int utilisateurId) async {
-    final response = await http.get(
-      Uri.parse('$url/api/utilisateurs/$utilisateurId'),
-      headers: {
-        'Content-Type': 'application/json',
+  Future<void> _rejeterRdv(int motifId) async {
+    TextEditingController raisonController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Raison du rejet'),
+          content: TextField(
+            controller: raisonController,
+            decoration: InputDecoration(hintText: "Saisissez la raison du rejet"),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Annuler'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text('Rejeter'),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String? token = prefs.getString('authToken');
+
+                final response = await http.put(
+                  Uri.parse('$url/api/rdvs/reject/$motifId'),
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer $token',
+                  },
+                  body: jsonEncode({
+                    'raison': raisonController.text,
+                  }),
+                );
+
+                if (response.statusCode == 200) {
+                  setState(() {
+                    _loadMotifs();
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Rendez-vous rejeté et notification envoyée.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Erreur lors du rejet du rendez-vous.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+
+                Navigator.of(context).pop(); // Fermer le dialogue
+              },
+            ),
+          ],
+        );
       },
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      return null;
-    }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 30),
+          onPressed: () => Navigator.pop(context),
+        ),
         backgroundColor: Colors.blue.shade400,
-        title: Text('Liste des demandes de rendez-vous'),
+        title: Text(
+          'Liste des demandes de rendez-vous',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-      body: ListView.builder(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : errorMessage.isNotEmpty
+          ? Center(child: Text(errorMessage))
+          : ListView.builder(
         itemCount: motifs.length,
         itemBuilder: (context, index) {
           final motif = motifs[index];
-          return FutureBuilder<Map<String, dynamic>?>(
-            future: _getUtilisateurInfo(motif['utilisateurId']),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError || !snapshot.hasData) {
-                return Text('Erreur lors de la récupération des données');
-              } else {
-                final userInfo = snapshot.data!;
-                return Card(
-                  child: ListTile(
-                    title: Text('${userInfo['prenom']} ${userInfo['nom']}'),
-                    subtitle: Text('Motif: ${motif['motifDescription']}'),
-                    trailing: isEditing && editingMotifId == motif['id']
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.calendar_today),
-                                onPressed: () async {
-                                  DateTime? date = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime(2101),
-                                  );
-                                  if (date != null) {
-                                    setState(() {
-                                      selectedDate = date;
-                                    });
-                                  }
-                                },
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (selectedDate != null) {
-                                    _enregistrerRdv(motif['utilisateurId'],
-                                        motif['motifDescription']);
-                                    setState(() {
-                                      isEditing = false;
-                                      editingMotifId = null;
-                                    });
-                                  }
-                                },
-                                child: Text('Soumettre'),
-                              ),
-                            ],
-                          )
-                        : IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () {
-                              setState(() {
-                                isEditing = true;
-                                editingMotifId = motif['id'];
-                              });
-                            },
-                          ),
+          int utilisateurId = motif['utilisateurId'];
+          Map<String, String>? utilisateur = utilisateurs[utilisateurId];
+
+          return Card(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Utilisateur: ${utilisateur?['prenom'] ?? 'Inconnu'} ${utilisateur?['nom'] ?? 'Inconnu'}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                );
-              }
-            },
+                  SizedBox(height: 5),
+                  Text('Motif: ${motif['motifDescription']}'),
+                  SizedBox(height: 5),
+                  Text('Date et Heure: ${motif['date'] ?? 'Non précisée'}'),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _accepterRdv(motif['motifId']);
+                        },
+                        child: Text('Accepter', style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _rejeterRdv(motif['motifId']);
+                        },
+                        child: Text('Rejeter', style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),

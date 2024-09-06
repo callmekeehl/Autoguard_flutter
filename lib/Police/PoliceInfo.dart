@@ -52,6 +52,10 @@ class _PoliceInfoState extends State<PoliceInfo> {
     return Scaffold(
       backgroundColor: Colors.blueGrey.shade100,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 30),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           'Informations du Compte',
           style: TextStyle(color: Colors.white),

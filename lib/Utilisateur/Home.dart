@@ -6,7 +6,9 @@ import 'package:autoguard_flutter/Fonction/Verification.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import '../Fonction/SignalList.dart';
+/*import 'package:google_fonts/google_fonts.dart';*/
 
 class Home extends StatefulWidget {
   @override
@@ -28,8 +30,6 @@ class _HomeState extends State<Home> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => Login()));
     } else {
-      // Vous pouvez également ajouter une vérification du jeton ici
-      // par exemple, appeler une API protégée avec le jeton
     }
   }
 
@@ -58,6 +58,13 @@ class _HomeState extends State<Home> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Verification()),
+    );
+  }
+
+  void _navigateToSignalList() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignalList()),
     );
   }
 
@@ -106,7 +113,8 @@ class _HomeState extends State<Home> {
                         children: [
                           Text(
                             "Autoguard",
-                            style: GoogleFonts.bungee(
+                            style: TextStyle(
+                              fontFamily: 'bungee',
                               color: Colors.white,
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
@@ -148,7 +156,7 @@ class _HomeState extends State<Home> {
                               fontWeight: FontWeight.bold,
                             )),
                         SizedBox(
-                          height: 30,
+                          height: 5,
                         ),
                         Column(
                           children: [
@@ -172,9 +180,10 @@ class _HomeState extends State<Home> {
                                         children: [
                                           Text(
                                             "Faire un signalement",
-                                            style: GoogleFonts.rowdies(
+                                            style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20),
+                                                fontSize: 17),
                                           ),
                                           Text(
                                             "Vous pouvez déclarer ici \nun véhicule volé ou perdu",
@@ -212,7 +221,8 @@ class _HomeState extends State<Home> {
                                         children: [
                                           Text(
                                             "Rendez-vous",
-                                            style: GoogleFonts.rowdies(
+                                            style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
@@ -252,7 +262,8 @@ class _HomeState extends State<Home> {
                                         children: [
                                           Text(
                                             "Notifications",
-                                            style: GoogleFonts.rowdies(
+                                            style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
@@ -292,12 +303,52 @@ class _HomeState extends State<Home> {
                                         children: [
                                           Text(
                                             "Vérification",
-                                            style: GoogleFonts.rowdies(
+                                            style: TextStyle(
+                                                fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez faire ici \nles vérifications des \nvéhicules suspects",
+                                            "Vous pouvez faire ici \nles vérifications si des \nvéhicules ont été déclarés \nou non",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 25,),
+                            GestureDetector(
+                              onTap: () => _navigateToSignalList(),
+                              child: Card(
+                                margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
+                                color: Colors.blue.shade200,
+                                elevation: 14,
+                                child: Container(
+                                  padding: EdgeInsets.all(15),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        "./assets/images/list.png",
+                                        height: 80,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Liste des \ndéclaration",
+                                            style: TextStyle(
+                                                fontFamily: 'bungee',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                          Text(
+                                            "Vous pouvez voir ici \nla liste des véhicules \nque vous avez déclarés",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),

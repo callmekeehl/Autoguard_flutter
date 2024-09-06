@@ -396,6 +396,10 @@ class _GarageSignState extends State<GarageSign> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.white, size: 30,),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                       Text(
                         "Création de compte",
                         style: TextStyle(

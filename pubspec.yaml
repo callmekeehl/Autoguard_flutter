@@ -31,7 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^0.8.5+3
-  syncfusion_flutter_maps: ^26.2.13
+  syncfusion_flutter_maps: ^26.2.14
+  syncfusion_flutter_calendar: ^26.2.14
+
 
 
 

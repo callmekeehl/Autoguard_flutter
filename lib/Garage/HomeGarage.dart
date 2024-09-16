@@ -1,4 +1,4 @@
-import 'package:autoguard_flutter/Fonction/Notif.dart';
+import 'package:autoguard_flutter/Admin/ListNotification.dart';
 import 'package:autoguard_flutter/Fonction/DemandeRdv.dart';
 import 'package:autoguard_flutter/Fonction/Signal.dart';
 import 'package:autoguard_flutter/Fonction/Verification.dart';
@@ -6,6 +6,8 @@ import 'package:autoguard_flutter/Garage/GarageInfo.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Fonction/Calendar.dart';
 
 class HomeGarage extends StatefulWidget {
   @override
@@ -47,7 +49,7 @@ class _HomeGarageState extends State<HomeGarage> {
   void _navigateToNotification() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Notif()),
+      MaterialPageRoute(builder: (context) => ListNotification()),
     );
   }
 
@@ -55,6 +57,13 @@ class _HomeGarageState extends State<HomeGarage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Verification()),
+    );
+  }
+
+  void _navigateToCalendar() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CalendarPage()),
     );
   }
 
@@ -299,6 +308,45 @@ class _HomeGarageState extends State<HomeGarage> {
                                           ),
                                           Text(
                                             "Vous pouvez faire ici \nles vérifications des \nvéhicules suspects",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 25,),
+                            GestureDetector(
+                              onTap: () => _navigateToCalendar(),
+                              child: Card(
+                                margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
+                                color: Colors.blue.shade200,
+                                elevation: 14,
+                                child: Container(
+                                  padding: EdgeInsets.all(15),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        "./assets/images/calendar.png",
+                                        height: 80,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Calendrier",
+                                            style: TextStyle(
+                                                fontFamily: 'bungee',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17),
+                                          ),
+                                          Text(
+                                            "Vous pouvez voir ici \nla liste de vos rendez-vous",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),

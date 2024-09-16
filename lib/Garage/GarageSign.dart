@@ -14,6 +14,7 @@ class GarageSign extends StatefulWidget {
 }
 
 class _GarageSignState extends State<GarageSign> {
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -27,7 +28,15 @@ class _GarageSignState extends State<GarageSign> {
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _register() async {
+    setState(() {
+      isLoading = true;
+    });
+
+
     if (!_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -56,12 +65,30 @@ class _GarageSignState extends State<GarageSign> {
       if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
 
+        // Récupérer le jeton JWT
         String? token = responseData['access_token'];
+        int? userId;
+
+
+        if (responseData['user_id'] != null) {
+          // Convertir l'ID utilisateur en entier s'il est renvoyé en tant que chaîne de caractères
+          userId = int.tryParse(responseData['user_id'].toString());
+        }
+
+        if (userId == null) {
+          _showErrorDialog('ID utilisateur non trouvé ou incorrect.');
+          setState(() {
+            isLoading = false;
+          });
+          return;
+        }
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (token != null) {
           await prefs.setString('authToken', token);
         }
+
+        await prefs.setInt('userId', userId);
         await prefs.setString('userNom', nameController.text);
         await prefs.setString('userPrenom', surnameController.text);
         await prefs.setString('userEmail', emailController.text);
@@ -81,6 +108,9 @@ class _GarageSignState extends State<GarageSign> {
           content: Text('Compte de garage créé avec succès!'),
           backgroundColor: Colors.green,
         ));
+        setState(() {
+          isLoading = false;
+        });
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => HomeGarage()));
@@ -88,9 +118,15 @@ class _GarageSignState extends State<GarageSign> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         _showErrorDialog(
             responseData['message'] ?? 'Erreur lors de la création du compte.');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       _showErrorDialog('Une erreur est survenue: ${e.toString()}');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -485,11 +521,14 @@ class _GarageSignState extends State<GarageSign> {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue.shade600),
-                                onPressed: _register,
+                                onPressed: isLoading ? null : _register,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 18.0),
-                                  child: Text(
+                                  child: isLoading
+                                      ? CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ) : Text(
                                     "Créer",
                                     style: TextStyle(
                                       color: Colors.white,

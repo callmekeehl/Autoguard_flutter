@@ -5,8 +5,6 @@ import 'package:autoguard_flutter/Admin/ListNotification.dart';
 import 'package:autoguard_flutter/Admin/ListPolice.dart';
 import 'package:autoguard_flutter/Admin/ListRdv.dart';
 import 'package:autoguard_flutter/Admin/ListUtilisateur.dart';
-import 'package:autoguard_flutter/Fonction/Notif.dart';
-import 'package:autoguard_flutter/Fonction/DemandeRdv.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

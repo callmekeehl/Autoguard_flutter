@@ -1,3 +1,5 @@
+import 'package:autoguard_flutter/Admin/ListDeclaration.dart';
+import 'package:autoguard_flutter/Fonction/Calendar.dart';
 import 'package:autoguard_flutter/Fonction/Notif.dart';
 import 'package:autoguard_flutter/Fonction/Signal.dart';
 import 'package:autoguard_flutter/Fonction/Verification.dart';
@@ -6,6 +8,7 @@ import 'package:autoguard_flutter/Police/PoliceInfo.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:autoguard_flutter/Police/SignalListPolice.dart';
 
 class HomePolice extends StatefulWidget {
   @override
@@ -44,10 +47,10 @@ class _HomePoliceState extends State<HomePolice> {
     );
   }
 
-  void _navigateToNotification() {
+  void _navigateToSignalList() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Notif()),
+      MaterialPageRoute(builder: (context) => ListDeclarationPolice()),
     );
   }
 
@@ -58,9 +61,15 @@ class _HomePoliceState extends State<HomePolice> {
     );
   }
 
+  void _navigateToCalendar() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CalendarPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Construisez l'interface utilisateur de la page Home ici
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -147,7 +156,7 @@ class _HomePoliceState extends State<HomePolice> {
                               fontWeight: FontWeight.bold,
                             )),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         Column(
                           children: [
@@ -203,19 +212,19 @@ class _HomePoliceState extends State<HomePolice> {
                                   child: Row(
                                     children: [
                                       Image.asset(
-                                        "./assets/images/rdv.png",
-                                        height: 80,
+                                        "./assets/images/rendezvous.png",
+                                        height: 90,
                                       ),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Rendez-vous",
+                                            "Liste des demande \nRendez-vous",
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20),
+                                                fontSize: 18),
                                           ),
                                           Text(
                                             "Vous pouvez consulter ici \n la liste des demandes de rdv \npar les utilisateurs",
@@ -234,7 +243,7 @@ class _HomePoliceState extends State<HomePolice> {
                               height: 25,
                             ),
                             GestureDetector(
-                              onTap: () => _navigateToNotification(),
+                              onTap: () => _navigateToSignalList(),
                               child: Card(
                                 margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
                                 color: Colors.blue.shade200,
@@ -244,7 +253,7 @@ class _HomePoliceState extends State<HomePolice> {
                                   child: Row(
                                     children: [
                                       Image.asset(
-                                        "./assets/images/notification.png",
+                                        "./assets/images/list.png",
                                         height: 80,
                                       ),
                                       Column(
@@ -252,14 +261,14 @@ class _HomePoliceState extends State<HomePolice> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Notifications",
+                                            "Liste des \nDéclarations",
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
                                           Text(
-                                            "Vous pouvez voir ici \nvos notifications",
+                                            "Vous pouvez voir ici \nles véhicules déclarés",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),
@@ -314,7 +323,7 @@ class _HomePoliceState extends State<HomePolice> {
                             ),
                             SizedBox(height: 25,),
                             GestureDetector(
-                              onTap: () => _navigateToSignalement(),
+                              onTap: () => _navigateToCalendar(),
                               child: Card(
                                 margin: EdgeInsets.fromLTRB(0, 0, 6, 0),
                                 color: Colors.blue.shade200,

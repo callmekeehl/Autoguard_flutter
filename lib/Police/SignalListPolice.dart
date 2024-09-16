@@ -3,12 +3,12 @@ import 'package:autoguard_flutter/Constant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ListDeclaration extends StatefulWidget {
+class ListDeclarationPolice extends StatefulWidget {
   @override
-  _ListDeclarationState createState() => _ListDeclarationState();
+  _ListDeclarationPoliceState createState() => _ListDeclarationPoliceState();
 }
 
-class _ListDeclarationState extends State<ListDeclaration> {
+class _ListDeclarationPoliceState extends State<ListDeclarationPolice> {
   List declarations = [];
   bool isLoading = true;
   String errorMessage = '';
@@ -42,7 +42,7 @@ class _ListDeclarationState extends State<ListDeclaration> {
     } else {
       setState(() {
         errorMessage =
-            'Erreur de chargement des Déclarations: ${response.reasonPhrase}';
+        'Erreur de chargement des Déclarations: ${response.reasonPhrase}';
         isLoading = false;
       });
     }
@@ -63,30 +63,20 @@ class _ListDeclarationState extends State<ListDeclaration> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage.isNotEmpty
-              ? Center(child: Text(errorMessage))
-              : ListView.builder(
-                  itemCount: declarations.length,
-                  itemBuilder: (context, index) {
-                    final declaration = declarations[index];
-                    return ListTile(
-                      title: Text(
-                          '${declaration['prenomProprio']} ${declaration['nomProprio']}'),
-                      subtitle: Text(declaration['telephoneProprio']),
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditDeclaration(declaration: declaration),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+          ? Center(child: Text(errorMessage))
+          : ListView.builder(
+        itemCount: declarations.length,
+        itemBuilder: (context, index) {
+          final declaration = declarations[index];
+          return ListTile(
+            title: Text(
+                'NOM: ${declaration['prenomProprio']} ${declaration['nomProprio']} \nMARQUE ${declaration['marque']} ${declaration['modele']} '
+                    '\nNUM PLAQUE&CHASSIS: ${declaration['numPlaque']} ${declaration['numChassis']}'),
+            subtitle: Text(declaration['telephoneProprio']),
+
+          );
+        },
+      ),
     );
   }
 }
@@ -229,12 +219,12 @@ class _EditDeclarationState extends State<EditDeclaration> {
             TextFormField(
               controller: _lieuLongController,
               decoration:
-                  InputDecoration(labelText: 'Lieu de perte (longitude)'),
+              InputDecoration(labelText: 'Lieu de perte (longitude)'),
             ),
             TextFormField(
               controller: _lieuLatController,
               decoration:
-                  InputDecoration(labelText: 'Lieu de perte (latitude)'),
+              InputDecoration(labelText: 'Lieu de perte (latitude)'),
             ),
             TextFormField(
               controller: _numChassisController,

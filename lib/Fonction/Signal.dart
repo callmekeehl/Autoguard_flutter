@@ -228,43 +228,43 @@ class _SignalState extends State<Signal> {
   }
 
   Widget _buildMapSelector() {
-    return GestureDetector(
-      onTapUp: (TapUpDetails details) {
-        // Conversion des coordonnées de l'écran vers les coordonnées de la carte
-        MapLatLng latLng = _mapController.pixelToLatLng(details.localPosition);
-
-        setState(() {
-          _selectedPosition = latLng;
-          lieuLatController.text = latLng.latitude.toString();
-          lieuLongController.text = latLng.longitude.toString();
-        });
-      },
-      child: Container(
-        height: 300,
-        child: SfMaps(
-          layers: [
-            MapTileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              initialZoomLevel: 15,
-              initialFocalLatLng: _selectedPosition,
-              zoomPanBehavior: _zoomPanBehavior,
-              controller: _mapController,
-              initialMarkersCount: 1,
-              markerBuilder: (BuildContext context, int index) {
-                return MapMarker(
-                  latitude: _selectedPosition.latitude,
-                  longitude: _selectedPosition.longitude,
-                  child: Icon(Icons.location_on, color: Colors.blue),
-
-                );
-              },
-            ),
-          ],
-        ),
+    return Container(
+      height: 300,
+      child: SfMaps(
+        layers: [
+          MapTileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            initialZoomLevel: 15,
+            initialFocalLatLng: _selectedPosition,
+            zoomPanBehavior: _zoomPanBehavior,
+            controller: _mapController,
+            initialMarkersCount: 1,
+            markerBuilder: (BuildContext context, int index) {
+              return MapMarker(
+                latitude: _selectedPosition.latitude,
+                longitude: _selectedPosition.longitude,
+                child: GestureDetector(
+                  onPanUpdate: (details) {
+                    setState(() {
+                      // Modifier la position du curseur selon les interactions
+                      _selectedPosition = MapLatLng(
+                        _selectedPosition.latitude + details.delta.dy * 0.0001,
+                        _selectedPosition.longitude + details.delta.dx * 0.0001,
+                      );
+                      // Mettre à jour les champs de longitude et latitude
+                      lieuLatController.text = _selectedPosition.latitude.toString();
+                      lieuLongController.text = _selectedPosition.longitude.toString();
+                    });
+                  },
+                  child: Icon(Icons.location_on, color: Colors.blue, size: 30),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
-
 
 
   @override

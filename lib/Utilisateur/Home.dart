@@ -6,10 +6,8 @@ import 'package:autoguard_flutter/Fonction/Verification.dart';
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Fonction/Calendar.dart';
 import '../Fonction/SignalList.dart';
-/*import 'package:google_fonts/google_fonts.dart';*/
 
 class Home extends StatefulWidget {
   @override
@@ -187,11 +185,11 @@ class _HomeState extends State<Home> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Faire un signalement",
+                                            "Faire un \nsignalement",
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 17),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             "Vous pouvez déclarer ici \nun véhicule volé ou perdu",
@@ -392,7 +390,7 @@ class _HomeState extends State<Home> {
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 17),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             "Vous pouvez voir ici \nla liste de vos rendez-vous",

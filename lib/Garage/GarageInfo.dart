@@ -43,6 +43,8 @@ class _GarageInfoState extends State<GarageInfo> {
       telephone = prefs.getString('userTelephone') ?? 'Non disponible';
       nomGarage = prefs.getString('nomGarage') ?? 'Non disponible';
       adresseGarage = prefs.getString('adresseGarage') ?? 'Non disponible';
+      print('Nom Garage: $nomGarage');
+      print('Adresse Garage: $adresseGarage');
     });
   }
 

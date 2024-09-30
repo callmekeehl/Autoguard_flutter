@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:autoguard_flutter/Constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_maps/maps.dart';
+
+
 
 class Signal extends StatefulWidget {
   @override
@@ -27,15 +30,14 @@ class _SignalState extends State<Signal> {
 
   File? _imageFile;
   String? _photoCarteGriseBase64;
-  late MapZoomPanBehavior _zoomPanBehavior;
-  late MapTileLayerController _mapController;
-  MapLatLng _selectedPosition = MapLatLng(6.125552372407288, 1.2103758524443544); // IAI par défaut
+  LatLng _selectedPosition = LatLng(6.125552372407288, 1.2103758524443544); // IAI par défaut
+
 
   @override
   void initState() {
     super.initState();
-    _zoomPanBehavior = MapZoomPanBehavior();
-    _mapController = MapTileLayerController();
+    lieuLongController = TextEditingController();
+    lieuLatController = TextEditingController();
   }
 
   Future<void> _pickImage() async {
@@ -230,42 +232,39 @@ class _SignalState extends State<Signal> {
   Widget _buildMapSelector() {
     return Container(
       height: 300,
-      child: SfMaps(
-        layers: [
-          MapTileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            initialZoomLevel: 15,
-            initialFocalLatLng: _selectedPosition,
-            zoomPanBehavior: _zoomPanBehavior,
-            controller: _mapController,
-            initialMarkersCount: 1,
-            markerBuilder: (BuildContext context, int index) {
-              return MapMarker(
-                latitude: _selectedPosition.latitude,
-                longitude: _selectedPosition.longitude,
-                child: GestureDetector(
-                  onPanUpdate: (details) {
-                    setState(() {
-                      // Modifier la position du curseur selon les interactions
-                      _selectedPosition = MapLatLng(
-                        _selectedPosition.latitude + details.delta.dy * 0.0001,
-                        _selectedPosition.longitude + details.delta.dx * 0.0001,
-                      );
-                      // Mettre à jour les champs de longitude et latitude
-                      lieuLatController.text = _selectedPosition.latitude.toString();
-                      lieuLongController.text = _selectedPosition.longitude.toString();
-                    });
-                  },
-                  child: Icon(Icons.location_on, color: Colors.blue, size: 30),
+      child: FlutterMap(
+        options: MapOptions(
+          center: _selectedPosition,
+          zoom: 15,
+          onTap: (tapPosition, LatLng latlng) {
+            setState(() {
+              _selectedPosition = latlng;
+              lieuLatController.text = latlng.latitude.toString();
+              lieuLongController.text = latlng.longitude.toString();
+            });
+          },
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            subdomains: ['a', 'b', 'c'],
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: _selectedPosition,
+                builder: (ctx) => Icon(
+                  Icons.location_on,
+                  color: Colors.blue,
+                  size: 30,
                 ),
-              );
-            },
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

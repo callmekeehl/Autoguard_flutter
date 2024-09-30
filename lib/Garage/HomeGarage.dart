@@ -177,11 +177,11 @@ class _HomeGarageState extends State<HomeGarage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Faire un signalement",
+                                            "Faire un \nsignalement",
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 17),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             "Vous pouvez déclarer ici \nun véhicule volé ou perdu",
@@ -343,7 +343,7 @@ class _HomeGarageState extends State<HomeGarage> {
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 17),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             "Vous pouvez voir ici \nla liste de vos rendez-vous",

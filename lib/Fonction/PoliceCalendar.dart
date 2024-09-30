@@ -1,10 +1,10 @@
 import 'package:autoguard_flutter/Constant.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart'; // Pour le formatage des dates
 
 class CalendarPage extends StatefulWidget {
   @override
@@ -18,17 +18,17 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   void initState() {
     super.initState();
-    _loadUserAppointments();
+    _loadPoliceAppointments(); // Remplacé pour charger les RDV selon le policeId
   }
 
-  // Fonction pour récupérer les rendez-vous de l'utilisateur depuis le backend
-  Future<void> _loadUserAppointments() async {
+  // Fonction pour récupérer les rendez-vous de la police depuis le backend
+  Future<void> _loadPoliceAppointments() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? utilisateurId = prefs.getInt('userId');
+    int? policeId = prefs.getInt('policeId'); // Récupérer le policeId
     String? token = prefs.getString('authToken');
 
-    if (utilisateurId == null || token == null) {
-      // Gérer le cas où l'utilisateur n'est pas connecté
+    if (policeId == null || token == null) {
+      // Gérer le cas où la police n'est pas connectée
       setState(() {
         isLoading = false;
       });
@@ -36,7 +36,7 @@ class _CalendarPageState extends State<CalendarPage> {
     }
 
     final response = await http.get(
-      Uri.parse('$url/api/rdvs/utilisateurs/$utilisateurId'),
+      Uri.parse('$url/api/rdvs/polices/$policeId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -46,8 +46,7 @@ class _CalendarPageState extends State<CalendarPage> {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<Appointment> appointments = data.map((rdv) {
-        // méthode de parsing correcte pour les dates
-        DateTime date = _parseDate(rdv['date']); // Récupération de la date et le parsing
+        DateTime date = _parseDate(rdv['date']); // Récupérer la date
         return Appointment(
           startTime: date,
           endTime: date.add(Duration(hours: 1)), // Durée du rendez-vous
@@ -66,7 +65,6 @@ class _CalendarPageState extends State<CalendarPage> {
       });
     }
   }
-
   // Fonction pour parser correctement la date au format "Tue, 06 Aug 2024 00:00:00 GMT"
   DateTime _parseDate(String dateStr) {
     return DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'").parseUtc(dateStr).toLocal();

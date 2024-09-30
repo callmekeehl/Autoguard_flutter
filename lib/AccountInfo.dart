@@ -1,6 +1,5 @@
 import 'package:autoguard_flutter/Utilisateur/Login.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountInfo extends StatefulWidget {
@@ -114,7 +113,7 @@ class _AccountInfoState extends State<AccountInfo> {
               children: [
                 Text(
                   value ?? 'Non disponible',
-                  style: GoogleFonts.kodeMono(
+                  style: TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],

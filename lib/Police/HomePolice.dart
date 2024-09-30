@@ -1,6 +1,4 @@
-import 'package:autoguard_flutter/Admin/ListDeclaration.dart';
-import 'package:autoguard_flutter/Fonction/Calendar.dart';
-import 'package:autoguard_flutter/Fonction/Notif.dart';
+import 'package:autoguard_flutter/Fonction/PoliceCalendar.dart';
 import 'package:autoguard_flutter/Fonction/Signal.dart';
 import 'package:autoguard_flutter/Fonction/Verification.dart';
 import 'package:autoguard_flutter/Police/ListeRdv.dart';
@@ -179,11 +177,11 @@ class _HomePoliceState extends State<HomePolice> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Faire un signalement",
+                                            "Faire un \nsignalement",
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 17),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             "Vous pouvez déclarer ici \nun véhicule volé ou perdu",
@@ -220,7 +218,7 @@ class _HomePoliceState extends State<HomePolice> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Liste des demande \nRendez-vous",
+                                            "Liste des demandes \nRendez-vous",
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
@@ -345,7 +343,7 @@ class _HomePoliceState extends State<HomePolice> {
                                             style: TextStyle(
                                                 fontFamily: 'bungee',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 17),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             "Vous pouvez voir ici \nla liste de vos rendez-vous",
